@@ -72,6 +72,14 @@ data = {}
     
 # data["카카오"] = arr
 
+# 당근마켓 
+# arr = []
+
+# year = 2018
+# size = 10
+
+# base_url = "https://medium.com/daangn/archive/"
+
 # NAVER D2
 arr = []
 
@@ -149,41 +157,6 @@ for url in urls:
 data["우아한 형제들"] = arr
 
 
-
-# 쿠팡
-res = requests.get('https://medium.com/coupang-tech/technote/home')
-html = res.content
-soup = BeautifulSoup(html, 'html.parser', from_encoding='utf-8')
-
-urls = soup.select('div > div > div > section > div > div > div > a > h3 > div')
-atag = soup.select('div.col.u-xs-marginBottom10.u-paddingLeft0.u-paddingRight0.u-paddingTop15.u-marginBottom30 > a')
-date = soup.select('div.postMetaInline.postMetaInline-authorLockup.ui-captionStrong.u-flex1.u-noWrapWithEllipsis > div > time')
-
-n = 1
-
-arr = []
-for url in urls:
-    # 날짜 가져오기 (년도가 생략돼있으면 올해 포스트한 글이다)
-    print(date[n-1].text)
-    dateText = date[n-1].text
-    if(len(dateText) <= 8):
-        year = "2019"
-    else:
-        year = dateText[dateText.find(",")+2 : dateText.find(",")+6]
-    
-    month = dateMatcher[dayFarmat(dateText[0:3])]
-    day = dayFarmat(dateText[4:5])
-    resDate = year + "." + month + "." + day
-
-    arr.append({"title" : url.text, "url" : atag[n-1].get('href'), "date" : resDate})
-    print(url.text +" "+ atag[n-1].get('href') +" "+ resDate)
-    n += 1  
-
-data["쿠팡"] = arr
-
-
-
-
 # 스포카
 arr = []
 for i in range(1, 12):
@@ -219,42 +192,6 @@ for i in range(1, 12):
     
 data["스포카"] = arr 
 
-
-
-
-# 야놀자
-arr = []
-for i in range(1, 3):
-    if(i == 1):
-        res = requests.get('https://yanolja.github.io/')
-        html = res.content
-        soup = BeautifulSoup(html, 'html.parser', from_encoding='utf-8')
-    else:
-        res = requests.get("https://yanolja.github.io/page"+str(i))
-        html = res.content
-        soup = BeautifulSoup(html, 'html.parser', from_encoding='utf-8')
-
-    urls = soup.select('#content > article > header > h2 > a')
-    atag = soup.select('#content > article > header > h2 > a')
-    date = soup.select('#content > article > footer > time')
-
-    n = 1
-    for url in urls:
-        # 날짜 만들기
-        dateText = date[n-1].text
-        year = dateText[7:11]
-        month = dateMatcher[dateText[3:6]]
-        day = dateText[0:2]
-        resDate = year + "." + month + "." + day
-
-        arr.append({"title" : url.text, "url" : "https://yanolja.github.io" + atag[n-1].get('href'), "date" : resDate})
-        print(url.text +" "+ "https://yanolja.github.io" + atag[n-1].get('href') + " " + resDate)
-        n += 1  
-    
-data["야놀자"] = arr
-
-
-
 # 라인
 arr = []
 for i in range(1, 19):
@@ -276,40 +213,6 @@ for i in range(1, 19):
         n += 1  
     
 data["라인"] = arr
-
-
-
-
-# 에어비엔비
-arr = []
-path = ["ai", "data", "airbnb-engineering-infrastructure", "web", "fintech", "medium-com-airbnb-engineering-people"]
-for i in path:
-    res = requests.get('https://medium.com/airbnb-engineering/'+str(i)+'/home')
-    html = res.content
-    soup = BeautifulSoup(html, 'html.parser', from_encoding='utf-8')
-
-    urls = soup.select('h3.u-contentSansBold.u-lineHeightTightest.u-xs-fontSize24.u-paddingBottom2.u-paddingTop5.u-fontSize32 div')
-    atag = soup.select('a:has(> h3.u-contentSansBold.u-lineHeightTightest.u-xs-fontSize24.u-paddingBottom2.u-paddingTop5.u-fontSize32)')
-    date = soup.select('div.postMetaInline.postMetaInline-authorLockup.ui-captionStrong.u-flex1.u-noWrapWithEllipsis > div > time')
-    
-    n = 1
-    for url in urls:
-        dateText = date[n-1].text
-        if(len(dateText) <= 8):
-            year = "2019"
-        else:
-            year = dateText[dateText.find(",")+2 : dateText.find(",")+6]
-        
-        month = dateMatcher[dayFarmat(dateText[0:3])]
-        day = dayFarmat(dateText[4:5])
-        resDate = year + "." + month + "." + day
-
-        arr.append({"title" : url.text, "url" : atag[n-1].get('href'), "date" : resDate})
-        print(url.text +" "+ atag[n-1].get('href') + " " + resDate)
-        n += 1  
-    
-data["에어비엔비"] = arr 
-
 
 
 # 구글 (첫페이지만 가져온다)
@@ -398,40 +301,6 @@ for url in urls:
     n += 1  
 
 data["넷플릭스"] = arr
-
-
-
-# 구글플레이 (최신)
-arr = []
-path = ["android-app-development", "game-development"]
-for i in path:
-    res = requests.get('https://medium.com/googleplaydev/tagged/' + i)
-    html = res.content
-    soup = BeautifulSoup(html, 'html.parser', from_encoding='utf-8')
-
-    urls = soup.select('h3.graf.graf--h3.graf-after--figure.graf--title')
-    atag = soup.select('a:has( h3.graf.graf--h3.graf-after--figure.graf--title)')
-    date = soup.select('div.postMetaInline.postMetaInline-authorLockup.ui-captionStrong.u-flex1.u-noWrapWithEllipsis > div > a > time')
-    
-    n = 1
-
-    for url in urls:
-        dateText = date[n-1].text
-        if(len(dateText) <= 8):
-            year = "2019"
-        else:
-            year = dateText[dateText.find(",")+2 : dateText.find(",")+6]
-        
-        month = dateMatcher[dayFarmat(dateText[0:3])]
-        day = dayFarmat(dateText[4:5])
-        resDate = year + "." + month + "." + day
-
-        arr.append({"title" : url.text, "url" : atag[n-1].get('href'), "date" : resDate})
-        print(url.text +" "+ atag[n-1].get('href') + " " + resDate)
-        n += 1
-
-data["구글플레이"] = arr
-
 
 #========================================== 아래부터는 ChromeDriver 사용 ===========================================
 
