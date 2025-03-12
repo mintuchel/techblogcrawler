@@ -43,42 +43,76 @@ def dayFarmat(n):
 # 딕셔너리 초기화
 data = {}
 
-# 카카오
-# arr = []
-# for i in range(1, 14):
-#     context = ssl._create_unverified_context()
-#     res = urlopen("https://tech.kakao.com/blog/"+str(i)+"/#posts", context=context)
-#     soup = BeautifulSoup(res.read(), 'html.parser', from_encoding='utf-8')
+# 카카오테크
+arr = []
 
-#     urls = soup.select('ul.list_post strong.tit_post')
-#     atag = soup.select('#posts > div > div.wrap_post > ul > li a.link_post')
-#     date = soup.select('#posts > div > div.wrap_post > ul > li > a.link_post > span')
+# ChromeDriver 설정
+service = Service('./chromedriver.exe')  # ChromeDriver 경로 지정
+driver = webdriver.Chrome(service=service)
+driver.implicitly_wait(3)  # 기본 대기 시간 설정
 
+# 카카오테크는 페이지 1부터 시작
+page = 1
 
-#     n = 1
-#     for url in urls:
-#         if(len(date[n-1].text)<3):# 몇개의 게시물의 날짜가 표시되지 않는다, 게시글까지 타고 들어가서 날짜를 가져온다
-#             context = ssl._create_unverified_context()
-#             res = urlopen(atag[n-1].get('href'), context=context)
-#             soup = BeautifulSoup(res.read(), 'html.parser', from_encoding='utf-8')
+# 페이지네이션 처리 : 더 이상 넘어갈 페이지가 없을때까지 크롤링 진행
+while True:
+    url = f'https://tech.kakaopay.com/page/{page}' # 페이지 URL 생성
+    driver.get(url) # 페이지에 접근
 
-#             date_branch = soup.select('span.txt_date')
-#             arr.append({"title" : url.text, "url" : atag[n-1].get('href'), "date" : date_branch[0].text})
-#             print(url.text +" "+ atag[n-1].get('href') +" "+ date_branch[0].text)
-#         else:
-#             arr.append({"title" : url.text, "url" : atag[n-1].get('href'), "date" : date[n-1].text})
-#             print(url.text +" "+ atag[n-1].get('href') +" "+ date[n-1].text)
-#         n += 1  
+    # 포스트 목록이 로드될 때까지 대기 (최대 5초)
+    try:
+        # Selenium에서 웹 페이지의 동적 콘텐츠를 기다리는 데 사용되는 부분
+        # WebDriverWait 객체를 생성하여, 특정 조건이 만족될 때까지 Selenium이 기다리도록 설정
+        wait = WebDriverWait(driver, 5)
+        # wait.until = 지정된 조건이 충족될 때까지 기다립니다
+        # 페이지에 <li class="_postListItem_1cl5f_66"> 요소가 최소 하나 이상 나타날 때까지 대기
+        wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "_postListItem_1cl5f_66")))
+
+        # 현재 페이지의 포스트 컴포넌트 추출
+        posts = driver.find_elements(By.CLASS_NAME, "_postListItem_1cl5f_66")
+        
+        for post in posts:
+            try:
+                # 링크(href) 가져오기
+                link_element = post.find_element(By.TAG_NAME, "a")
+                link = link_element.get_attribute("href")
+
+                # 제목(<strong>) 가져오기
+                title_element = post.find_element(By.TAG_NAME, "strong")
+                title = title_element.text
+
+                # 날짜(<time>) 가져오기
+                date_element = post.find_element(By.TAG_NAME, "time")
+                date = date_element.text
+
+                arr.append({"title": title, "url": link, "date": date})
+                print(f"{title} {link} {date}")
+            except Exception as e:
+                print(f"포스트 데이터 추출 중 오류: {e}")
+                continue
+
+        # 다음 페이지 버튼 확인
+        next_page_button = driver.find_element(By.CSS_SELECTOR, "a[aria-label='다음 페이지']")
     
-# data["카카오"] = arr
+        if next_page_button.is_enabled():
+            # 다음 페이지로 이동 (페이지 번호 증가)
+            page+=1
+        else:
+            print("마지막 페이지에 도달했습니다.")
+            break
 
-# 당근마켓 
-# arr = []
+    except NoSuchElementException:
+        print("다음 버튼을 찾을 수 없음. 크롤링 종료.")
+        break
+    except Exception as e:
+        print(f"페이지 처리 중 오류 발생: {e}")
+        break
 
-# year = 2018
-# size = 10
+# 브라우저 종료
+driver.quit()
 
-# base_url = "https://medium.com/daangn/archive/"
+# NHN 크롤링 결과 DICTIONARY에 저장
+data["카카오테크"] = arr
 
 # NAVER D2
 arr = []
@@ -128,8 +162,6 @@ while True :
     page += 1
 
 data["NAVER D2"] = arr
-
-
 
 # 우아한 형제들
 context = ssl._create_unverified_context()
@@ -365,6 +397,76 @@ driver.quit()
 # NHN 크롤링 결과 DICTIONARY에 저장
 data["NHN"] = arr
 
+# 카카오테크
+arr = []
+
+# ChromeDriver 설정
+service = Service('./chromedriver.exe')  # ChromeDriver 경로 지정
+driver = webdriver.Chrome(service=service)
+driver.implicitly_wait(3)  # 기본 대기 시간 설정
+
+# 카카오테크는 페이지 1부터 시작
+page = 1
+
+# 페이지네이션 처리 : 더 이상 넘어갈 페이지가 없을때까지 크롤링 진행
+while True:
+    url = f'https://tech.kakaopay.com/page/{page}' # 페이지 URL 생성
+    driver.get(url) # 페이지에 접근
+
+    # 포스트 목록이 로드될 때까지 대기 (최대 5초)
+    try:
+        # Selenium에서 웹 페이지의 동적 콘텐츠를 기다리는 데 사용되는 부분
+        # WebDriverWait 객체를 생성하여, 특정 조건이 만족될 때까지 Selenium이 기다리도록 설정
+        wait = WebDriverWait(driver, 5)
+        # wait.until = 지정된 조건이 충족될 때까지 기다립니다
+        # 페이지에 <li class="_postListItem_1cl5f_66"> 요소가 최소 하나 이상 나타날 때까지 대기
+        wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, "_postListItem_1cl5f_66")))
+
+        # 현재 페이지의 포스트 컴포넌트 추출
+        posts = driver.find_elements(By.CLASS_NAME, "_postListItem_1cl5f_66")
+        
+        for post in posts:
+            try:
+                # 링크(href) 가져오기
+                link_element = post.find_element(By.TAG_NAME, "a")
+                link = link_element.get_attribute("href")
+
+                # 제목(<strong>) 가져오기
+                title_element = post.find_element(By.TAG_NAME, "strong")
+                title = title_element.text
+
+                # 날짜(<time>) 가져오기
+                date_element = post.find_element(By.TAG_NAME, "time")
+                date = date_element.text
+
+                arr.append({"title": title, "url": atag, "date": date})
+                print(f"{title} {atag} {date}")
+            except Exception as e:
+                print(f"포스트 데이터 추출 중 오류: {e}")
+                continue
+
+        # 다음 페이지 버튼 확인
+        next_page_button = driver.find_element(By.CSS_SELECTOR, "a[aria-label='다음 페이지']")
+    
+        if next_page_button.is_enabled():
+            # 다음 페이지로 이동 (페이지 번호 증가)
+            page+=1
+        else:
+            print("마지막 페이지에 도달했습니다.")
+            break
+
+    except NoSuchElementException:
+        print("다음 버튼을 찾을 수 없음. 크롤링 종료.")
+        break
+    except Exception as e:
+        print(f"페이지 처리 중 오류 발생: {e}")
+        break
+
+# 브라우저 종료
+driver.quit()
+
+# NHN 크롤링 결과 DICTIONARY에 저장
+data["카카오테크"] = arr
 
 
 # 모든 내용 json 파일화
