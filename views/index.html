@@ -7,9 +7,6 @@
       ul {
         padding: 0;
       }
-      div {
-        /*opacity: 0;*/
-      }
       body {
         background-color: black;
       }
@@ -23,8 +20,11 @@
 
     </iframe> -->
     <div id="content">
-      <ul id="list"></ul>
+      <div class="card-container">
+        <ul id="list"></ul>
+      </div>
     </div>
+
     <script>
       colorMatcher = {
         카카오: "#fcc203",
@@ -86,14 +86,16 @@
             res += `
       <li class = "card">
         <div class="card-image"></div>
-        <a href="${url}"> 
-          <h2>${title}</h2>
-        </a>
-        <p>${date}</p>
-        <div style = "color: ${colorMatcher[cName]}; font-size: 20px; font-weight: bold;">
-          ${cName}
+        <div class="card-info">
+          <a href="${url}"> 
+            <h2>${title}</h2>
+          </a>
+          <p>${date}</p>
+          <div style = "color: ${colorMatcher[cName]}; font-size: 20px; font-weight: bold;">
+            ${cName}
+          </div>
+          <button class="btn-wide">click</button>
         </div>
-        <button class="btn-wide">click</button>
       </li>
   `;
           });
