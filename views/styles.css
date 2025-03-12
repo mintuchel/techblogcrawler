@@ -32,13 +32,14 @@ body {
   gap: 15px; /* 이미지와 정보 사이 간격 */
 }
 
-/* 이미지 placeholder */
 .card-image {
   width: 150px;
   height: 150px;
   background-color: #e0e0e0;
   border-radius: 4px;
-  margin-bottom: 15px;
+  background-size: cover; /* 요소를 가득 채우도록 */
+  background-position: center; /* 이미지 중앙 정렬 */
+  background-repeat: no-repeat; /* 반복 금지 */
 }
 
 .card-info {

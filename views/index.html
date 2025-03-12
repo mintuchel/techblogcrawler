@@ -40,6 +40,24 @@
         "NAVER D2": "#4eb825",
       };
 
+      imageMatcher = {
+        카카오:
+          "https://scontent-ssn1-1.xx.fbcdn.net/v/t39.30808-6/277791097_453002953292320_8846436788708538037_n.png?stp=dst-jpg_tt6&_nc_cat=107&ccb=1-7&_nc_sid=a5f93a&_nc_ohc=tMvJJs8UxSsQ7kNvgHQYfv-&_nc_oc=AdhvRCorvK_ks9Q3pnNFLMipUmkh5B-ybtpqytV147IgdxJWBe8VMGuFU6WgLWQqidQ&_nc_zt=23&_nc_ht=scontent-ssn1-1.xx&_nc_gid=AAsUzKW0cbN-K0UHQUgnx8L&oh=00_AYGLP753LJTLO5YaQA_3SPc5Kya5VoKiz3-u_sxb9NrD3g&oe=67D6FAA4",
+        "우아한 형제들": "#0cb0c9",
+        쿠팡: "#eb3c0c",
+        스포카: "#098ae0",
+        라인: "#12d90b",
+        구글: "#f70505",
+        페이스북:
+          "https://img.freepik.com/premium-vector/facebook-logo-vector-square_667864-111.jpg?semt=ais_hybrid",
+        넷플릭스:
+          "https://w7.pngwing.com/pngs/393/55/png-transparent-netflix-logo-thumbnail.png",
+        구글플레이: "#0bdb57",
+        NHN: "https://d2juy7qzamcf56.cloudfront.net/2024-08-06/34077a97-f429-48b0-9332-6f02659380a3.png",
+        "NAVER D2":
+          "https://pbs.twimg.com/profile_images/1839220564520538112/nx79wGAB_400x400.png",
+      };
+
       $(function () {
         $.get("http://localhost:8888/result.json", {}, function (data, status) {
           console.log(data);
@@ -52,14 +70,10 @@
             "우아한 형제들",
             "쿠팡",
             "스포카",
-            "야놀자",
-            "레진",
             "라인",
-            "에어비엔비",
             "구글",
             "페이스북",
             "넷플릭스",
-            "라이엇게임즈",
             "구글플레이",
             "NHN",
             "NAVER D2",
@@ -85,7 +99,7 @@
 
             res += `
       <li class = "card">
-        <div class="card-image"></div>
+        <div class="card-image" style="background-image: url('${imageMatcher[cName]}');"></div>
         <div class="card-info">
           <a href="${url}"> 
             <h2>${title}</h2>
