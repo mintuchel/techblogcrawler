@@ -145,6 +145,97 @@
           renderPage();
         });
       });
+
+      $(function () {
+        let originalData = []; // 원본 데이터 저장
+        let filteredData = []; // 검색 후 필터링된 데이터 저장
+        let currentPage = 0;
+        const itemsPerPage = 10;
+
+        function renderPage() {
+          let start = currentPage * itemsPerPage;
+          let end = start + itemsPerPage;
+          let pageItems = filteredData.slice(start, end);
+
+          let res = "";
+          pageItems.forEach((rawItem) => {
+            const [date, title, url, cName] = rawItem.split("$");
+            res += `
+        <li class="card">
+          <div class="card-image" style="background-image: url('${
+            imageMatcher[cName] || ""
+          }');"></div>
+          <div class="card-info">
+            <a href="${url}"> 
+              <h2>${title}</h2>
+            </a>
+            <p>${date}</p>
+            <div style="color: ${
+              colorMatcher[cName] || "#fff"
+            }; font-size: 20px; font-weight: bold;">
+              ${cName}
+            </div>
+            <button class="btn-wide">click</button>
+          </div>
+        </li>
+      `;
+          });
+
+          $("#list").html(res);
+          $("#prevPage").prop("disabled", currentPage === 0);
+          $("#nextPage").prop("disabled", end >= filteredData.length);
+        }
+
+        function filterData(keyword) {
+          if (keyword.trim() === "") {
+            filteredData = [...originalData]; // 검색어가 없으면 전체 데이터 표시
+          } else {
+            filteredData = originalData.filter((item) =>
+              item.toLowerCase().includes(keyword.toLowerCase())
+            );
+          }
+          currentPage = 0; // 검색 시 첫 페이지로 초기화
+          renderPage();
+        }
+
+        $.get("result.json", function (data) {
+          for (const cName in data) {
+            if (data.hasOwnProperty(cName)) {
+              data[cName].forEach((item) => {
+                originalData.push(
+                  item.date + "$" + item.title + "$" + item.url + "$" + cName
+                );
+              });
+            }
+          }
+          originalData.sort().reverse();
+          filteredData = [...originalData];
+          renderPage();
+        });
+
+        $("#searchButton").click(() => {
+          const keyword = $("#searchInput").val();
+          filterData(keyword);
+        });
+
+        $("#searchInput").keypress((event) => {
+          if (event.which === 13) {
+            // 엔터 키 입력 시 검색 실행
+            const keyword = $("#searchInput").val();
+            filterData(keyword);
+          }
+        });
+
+        $("#nextPage").click(() => {
+          currentPage++;
+          renderPage();
+        });
+
+        $("#prevPage").click(() => {
+          currentPage--;
+          renderPage();
+        });
+      });
     </script>
   </body>
 </html>
