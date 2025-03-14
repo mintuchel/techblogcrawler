@@ -112,7 +112,7 @@
       }
 
       $(function () {
-        $.get("http://localhost:8888/result.json", {}, function (data, status) {
+        $.get("result.json", function (data, status) {
           for (const cName in data) {
             if (data.hasOwnProperty(cName)) {
               data[cName].forEach((item) => {
