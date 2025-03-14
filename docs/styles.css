@@ -13,6 +13,15 @@ body {
   padding: 20px;
 }
 
+/* 제목 스타일 */
+h1 {
+  text-align: center; /* 중앙 정렬 */
+  font-size: 35px; /* 글자 크기 */
+  font-weight: bold; /* 볼드 처리 */
+  margin-bottom: 20px; /* 아래 여백 추가 */
+  color: white; /* 어두운 회색 */
+}
+
 /* 검색창 컨테이너 */
 .search-container {
   width: 75%;
